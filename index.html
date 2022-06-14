@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Fetch API Exercise Lab</title>
+  </head>
+  <body>
+    <div id="container">
+      <h1>The Fetch API Exercises</h1>
+      <p>Open the web inspector console to test.</p>
+      <button id = "load-photo">Load Dog Photo</button>
+    </div>
+  </body>
+  <script>
+    // Place your code below this line
+
+    const url = 'https://dog.ceo/api/breeds/image/random';
+    const button = document.querySelector('#load-photo');
+
+    function getRandomDogPhoto(){
+      return fetch(url)
+        .then(res => res.json())
+        .catch(err => console.error(err))
+    }
+    
+    async function handleButton(){
+      loadSpinner();
+      let data = await getRandomDogPhoto();
+      removeSpinner();
+      button.parentElement.removeChild(button);
+      console.log(data);
+      renderDogPhoto(data.message);
+    }
+    
+    function renderDogPhoto(url){
+      let imgHTML = `<img src="${url}" alt="Random photo of a dog" />`;
+      document.querySelector('#container').insertAdjacentHTML('beforeend', imgHTML);
+    }
+
+    function loadSpinner(){
+      button.disabled = true;
+      const spinner = 'assets/loader.svg';
+      const imgHTML = `<img src="${spinner}" id="spinner" alt="Loading spinner image" />`
+      //document.querySelector('#container').insertAdjacentHTML('beforeend', imgHTML);
+      button.insertAdjacentHTML(`afterbegin`, imgHTML);
+    }
+
+    function removeSpinner(){
+      const spinner = document.querySelector('img#spinner');
+      spinner.parentElement.removeChild(spinner);
+    }
+
+    button.addEventListener('click', handleButton);
+
+    // the function init() is redundant
+    // function init(){
+    //   button.addEventListener('click', handleButton);
+    // }
+
+    //init();
+  </script>
+</html>
